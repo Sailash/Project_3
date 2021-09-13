@@ -25,10 +25,10 @@ raw_df = spark \
     .readStream \
     .format("kafka") \
     .option("kafka.bootstrap.servers", "localhost:9092") \
-    .option("subscribe", "sample") \
+    .option("subscribe", "activeCitiesInUs") \
     .option("startingOffsets", "latest") \
     .load() \
-    .selectExpr("CAST(timestamp AS timestamp)","CAST(value AS STRING)")
+    .selectExpr("CAST(value AS STRING)")
 
 # Created Schema for Structured Streaming
 schema = StructType(
