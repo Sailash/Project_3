@@ -15,7 +15,5 @@ producer = KafkaProducer(value_serializer=lambda m: str(m).encode("utf-8"),
 # Creating Streaming Socket
 ws = websocket.WebSocketApp("wss://stream.meetup.com/2/rsvps", on_message=on_message)
 
-# Sending the data for every 2 second
-while(1):
-    ws.run_forever()
-    time.sleep(2)
+# Gets the data continuously
+ws.run_forever()
