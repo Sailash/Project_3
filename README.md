@@ -59,7 +59,7 @@ bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 /ho
 8. Start <consumer>.ipynb file to visualize the data.
 
 # License
-- This project uses the following license: <MIT License>
+- This project uses the following license: [MIT License](https://github.com/git/git-scm.com/blob/main/MIT-LICENSE.txt)
 
 # References
 - https://mvnrepository.com/artifact/org.apache.spark/spark-sql-kafka-0-10_2.12/3.1.2
