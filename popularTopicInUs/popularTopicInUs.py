@@ -17,7 +17,7 @@ from pyspark.sql.types import *
 # Created spark session
 spark = SparkSession \
     .builder \
-    .appName("activeCitiesInUs") \
+    .appName("popularTopicInUs") \
     .getOrCreate()
 
 # Created kafka consumer using spark readStream
@@ -25,7 +25,7 @@ raw_df = spark \
     .readStream \
     .format("kafka") \
     .option("kafka.bootstrap.servers", "localhost:9092") \
-    .option("subscribe", "activeCitiesInUs") \
+    .option("subscribe", "popularTopicInUs") \
     .option("startingOffsets", "latest") \
     .load() \
     .selectExpr("CAST(value AS STRING)")
