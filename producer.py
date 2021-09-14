@@ -5,7 +5,7 @@ from kafka import KafkaProducer
 
 # Sending data to kafka
 def on_message(ws, message):
-     producer.send('sample', message)
+     producer.send('meetUpProducer', message)
      producer.flush()
 
 # Creating Kafka Producer
