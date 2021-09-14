@@ -1,7 +1,10 @@
 # What are the current active cities in India which are scheduling Meetup Events?
 
 # To start pyspark shell
-# ./pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2
+# ./pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.
+
+# To Create topic
+# ./kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic popularTopicsInUsOutput
 
 # To run using spark submit
 # ./spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 /home/flash/Desktop/rev/popularTopicInUs/popularTopicInUs.py
@@ -17,7 +20,7 @@ from pyspark.sql.types import *
 # Created spark session
 spark = SparkSession \
     .builder \
-    .appName("popularTopicInUs") \
+    .appName("popularTopicsInUs") \
     .getOrCreate()
 
 # Created kafka consumer using spark readStream
@@ -25,7 +28,7 @@ raw_df = spark \
     .readStream \
     .format("kafka") \
     .option("kafka.bootstrap.servers", "localhost:9092") \
-    .option("subscribe", "popularTopicInUs") \
+    .option("subscribe", "meetUpProducer") \
     .option("startingOffsets", "latest") \
     .load() \
     .selectExpr("CAST(value AS STRING)")
@@ -91,7 +94,7 @@ output = topic_df.groupBy(col("topic")).agg(count("*").alias("total_count")).ord
 output_df = (output.select(to_json(struct(col("*"))).alias("value")))
 
 # Sending the data to kafka brocker
-query = output_df.writeStream.format("kafka").option("kafka.bootstrap.servers", "localhost:9092").option("checkpointLocation", "/tmp/checkpoint").outputMode("complete").option("topic", "output").start()
+query = output_df.writeStream.format("kafka").option("kafka.bootstrap.servers", "localhost:9092").option("checkpointLocation", "/tmp/checkpoint2").outputMode("complete").option("topic", "popularTopicsInUsOutput").start()
 
 # Waits for the termination signal from user
 query.awaitTermination()
