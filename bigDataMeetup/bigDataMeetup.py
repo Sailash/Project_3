@@ -3,11 +3,14 @@
 # To start pyspark shell
 # ./pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2
 
+# To Create output topic
+# ./kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic bigDataMeetingOutput
+
 # To run using spark submit
 # ./spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 /home/flash/Desktop/rev/activeCities/activeCities.py
 
 # To get data from terminal using kafka consumer
-# ./kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic output --from-beginning
+# ./kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic activeCitiesInUsOutput --from-beginning
 
 # Import Required Libraries
 from pyspark.sql import SparkSession
@@ -25,7 +28,7 @@ raw_df = spark \
     .readStream \
     .format("kafka") \
     .option("kafka.bootstrap.servers", "localhost:9092") \
-    .option("subscribe", "bigDataMeeting") \
+    .option("subscribe", "meetUpProducer") \
     .option("startingOffsets", "latest") \
     .load() \
     .selectExpr("CAST(value AS STRING)")
@@ -87,7 +90,7 @@ output = df.filter(col("topic").like("big-data")).groupBy(col("country")).agg(co
 output_df = output.select(to_json(struct(col("*"))).alias("value"))
 
 # Sending the data to kafka brocker
-query = output_df.writeStream.format("kafka").option("kafka.bootstrap.servers", "localhost:9092").option("checkpointLocation", "/tmp/checkpoint").outputMode("complete").option("topic", "output").start()
+query = output_df.writeStream.format("kafka").option("kafka.bootstrap.servers", "localhost:9092").option("checkpointLocation", "/tmp/checkpoint3").outputMode("complete").option("topic", "bigDataMeetingOutput").start()
 
 # Waits for the termination signal from user
 query.awaitTermination()
