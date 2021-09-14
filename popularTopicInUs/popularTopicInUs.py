@@ -1,4 +1,4 @@
-# What are the current active cities in India which are scheduling Meetup Events?
+# What are the current active cities in US which are scheduling Meetup Events?
 
 # To start pyspark shell
 # ./pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.
